@@ -1,5 +1,5 @@
 ![yamdb workflow](https://github.com/kotbarbarossa/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
-#### ip: 51.250.73.154
+### ip: 51.250.73.154
 
 # Проект YaMDb. Протокол "Фантом".
 ## _Отличный специализированный портал для получения актуальной информации о любых современных произведениях во всех видах искусств!_
