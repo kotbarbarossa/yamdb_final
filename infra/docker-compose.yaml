@@ -1,12 +1,12 @@
 version: '3.3'
 
 volumes:
-  database:
   static_value:
   media_value:
+  database:
 
 services:
-  debe:
+  db:
     image: postgres:13.0-alpine
     volumes:
       - database:/var/lib/postgresql/data/
@@ -19,7 +19,7 @@ services:
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
-      - debe
+      - db
     env_file:
       - ./.env
   nginx:
