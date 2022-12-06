@@ -1,4 +1,5 @@
 ![yamdb workflow](https://github.com/kotbarbarossa/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+### ip: 51.250.73.154
 
 # Проект YaMDb. Протокол "Фантом".
 ## _Отличный специализированный портал для получения актуальной информации о любых современных произведениях во всех видах искусств!_
@@ -16,57 +17,56 @@
 
 Кроме всего прочего в проекте реализована полноценная админ зона с полным функционалом для работы со всем контентом проекта!
 
+### Как запустить проект:
 
-### Технологии:
-
-| Plugin | Release version |
-| ------ | ------ |
-| Python **3.7** | [Release Date: June 27, 2018] |
-| Django **2.2.16** | [Release notes] |
-| djangorestframework **3.12.4** | [3.12.4 Date: 26th March 2021] |
-| djangorestframework-simplejwt **4.7.2** | [Project description] |
-| charset-normalizer **2.0.12** | [Charset Detection, for Everyone] |
-| PyJWT **2.1.0** | [Docs] |
-| importlib-metadata **4.2.0** | [Project description] |
-| requests **2.26.0** | [Released: Jun 29, 2022] |
-
-### Для запуска проекта необходимо:
-
-Клонировать репозиторий и перейти в него в командной строке:
-
-```sh
-git clone git@github.com:kotbarbarossa/api_yamdb.git
+Клонируем репозиторий и переходим в него:
+```bash
+git clone https://github.com/themasterid/infra_sp2
+cd infra_sp2
 cd api_yamdb
 ```
 
-Cоздать и активировать виртуальное окружение:
-
-```sh
-python3 -m venv env
-source venv/bin/activate
+Создаем и активируем виртуальное окружение:
+```bash
+python3 -m venv venv
+source /venv/bin/activate
+python -m pip install --upgrade pip
 ```
 
-Обновить pip:
-
-```sh
-python3 -m pip install --upgrade pip
-```
-
-Установить зависимости из файла requirements.txt:
-
-```sh
+Ставим зависимости из requirements.txt:
+```bash
 pip install -r requirements.txt
 ```
 
-Выполнить миграции:
-
-```sh
-python3 manage.py migrate
+Переходим в папку с файлом docker-compose.yaml:
+```bash
+cd infra
 ```
 
-Запустить проект:
-```sh
-python3 manage.py runserver
+Запускаем сборку:
+```bash
+docker-compose up -d --build
+```
+
+Выполняем миграции:
+
+```bash
+docker-compose exec web python manage.py migrate
+```
+
+Создаем суперпользователя:
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+
+Србираем статику:
+```bash
+docker-compose exec web python manage.py collectstatic --no-input
+```
+
+Останавливаем контейнеры:
+```bash
+docker-compose down -v
 ```
 
 ### Наполнение базы прямиком из ```.csv``` файла!
@@ -77,7 +77,56 @@ python3 manage.py runserver
 python manage.py load_data_from_csv
 ```
 
-### Актуальная информация по взаимодействию с эндпоинтами
+### Загрузка данных из фикстур в формате json.
+
+```sh
+docker-compose run web python manage.py loaddata fixtures.json 
+```
+
+### Шаблон наполнения infra/.env
+```
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
+```
+
+### Для регистрация нового пользователя необходимо выполнить следующее:
+
+1. Отправляем POST-запрос с полями 
+email и username 
+на эндпоинт /api/v1/auth/signup/.  
+
+```sh
+{  
+    "email": "string",  
+    "username": "string"  
+}
+```
+2. На указанный email получаем (confirmation_code).
+
+3. Отправляем POST-запрос с параметрами 
+username и confirmation_code 
+на эндпоинт /api/v1/auth/token/.  
+
+```sh
+{  
+    "username": "string",  
+    "confirmation_code": "string"  
+} 
+```
+
+4. В ответе на запрос получаем JWT-токен.
+
+```sh
+{  
+    "token": "string",  
+}
+```
+
+### Актуальная информация по взаимодействию с эндпоинтами.
 
 Для быстро ориентирования в системе эндоитов API в проекте подключена документация API! Возпользоваться ей можно пройдя по адресу:
 ```sh
@@ -85,44 +134,17 @@ http://127.0.0.1:8000/redoc/
 ```
 В ней описаны возможные запросы к API и структура ожидаемых ответов. Для каждого запроса указаны уровни прав доступа: пользовательские роли, которым разрешён запрос, права доступа и дополнительные параметры, если это необходимо.
 
-
-### Авторы 
-
-Проект был создан и протестирован в кратчайшие сроки всего лишь тремя таллантливыми молодыми разработчиками из сердца кремниевой долины России - Татарстана:
-
-[![N|Solid](https://sun9-north.userapi.com/sun9-77/s/v1/ig2/yQB4AzD-dchlG-XdyxgRSWwW3juGJwIzweL_M4hmTXvaJ4Etm-9ukE9OUFYSv49Q1YNlq5-CaBG3iDF0xH3t7jMj.jpg?size=2000x1418&quality=95&type=album)](https://www.youtube.com/channel/UC0NWbtRrU1YvsCP_0Slq-9A/featured)
-
+### Автор 
 
 **Эльдар Барбаросса** 
 [INSTAGRAM]
 
-**Николай Слесарев** 
-[github.com/Kolanser]
-
-**Марсель Галиаскаров** 
-[github.com/Marsel168]
-
-В кодревью принял участие известный и всеми любимый ревьюер Яндекс практикума [Максим Митягин]:
-> Тут должен быть коментарий ревьюера
-
-
-_Если этот Readme был полезен не забудь поддержить подпиской [youtube] канал тимлида (не свзанный с програмированием)! Ведь это дает:_
-*  +150 кармы от фракции Бородатых Котов Вегетарианцев!
-*  +135 репутации Казанских золотордынцев
-*  а также один бесплатный просмотр фильма на сайте Лордфильм-одинихксбет-мелбет-казинотрилопаты точка ру
+_Если этот Readme был полезен не забудь поддержить подпиской мой [youtube] канал (не свзанный с програмированием)! Ведь это дает:_
+*  +150 кармы от фракции Рыжих Викингов!
+*  +135 репутации Анталийских котов.
+*  а также один бесплатный просмотр заката на крыше в одном их Турецких городов!
 
 [//]: # (links)
 
-   [Максим Митягин]: <https://github.com/mityagin>
-   [github.com/Kolanser]: https://github.com/Kolanser
-   [github.com/Marsel168]: https://github.com/Marsel168
-   [Release Date: June 27, 2018]: https://www.python.org/downloads/release/python-370/
-   [Release notes]: https://docs.djangoproject.com/en/4.0/releases/2.2.16/
-   [3.12.4 Date: 26th March 2021]: https://www.django-rest-framework.org/community/release-notes/#312x-series
-   [Project description]: https://pypi.org/project/djangorestframework-simplejwt/4.7.2/
-   [Charset Detection, for Everyone]: https://pypi.org/project/charset-normalizer/
-   [Docs]: https://pyjwt.readthedocs.io/en/2.1.0/
-   [Project description]: https://pypi.org/project/importlib-metadata/
-   [Released: Jun 29, 2022]: https://pypi.org/project/requests/
    [youtube]: https://www.youtube.com/channel/UC0NWbtRrU1YvsCP_0Slq-9A/
    [INSTAGRAM]: https://instagram.com/kot.barbarossa?igshid=YmMyMTA2M2Y=
