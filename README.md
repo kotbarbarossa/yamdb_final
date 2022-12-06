@@ -51,17 +51,17 @@ docker-compose up -d --build
 Выполняем миграции:
 
 ```bash
-docker-compose exec web python manage.py migrate
+sudo docker-compose exec web python manage.py migrate
 ```
 
 Создаем суперпользователя:
 ```bash
-docker-compose exec web python manage.py createsuperuser
+sudo docker-compose exec web python manage.py createsuperuser
 ```
 
 Србираем статику:
 ```bash
-docker-compose exec web python manage.py collectstatic --no-input
+sudo docker-compose exec web python manage.py collectstatic --no-input
 ```
 
 Останавливаем контейнеры:
