@@ -21,7 +21,7 @@
 
 Клонируем репозиторий и переходим в него:
 ```bash
-git clone https://github.com/themasterid/infra_sp2
+git clone https://github.com/kotbarbarossa/infra_sp2
 cd infra_sp2
 cd api_yamdb
 ```
